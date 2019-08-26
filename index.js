@@ -2,23 +2,13 @@
 /* eslint-disable no-undef */
 /* eslint-disable strict */
 
-
-//https://developer.nps.gov/api/v1/parks?stateCode=co&limit=5&api_key=05k9MEhhbqhZkN9LEleXdVgUixCszymjr5lc3Vb3
-
-
 function formatQueryParams(params) {
   const queryItems = Object.keys(params)
     .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`);
   return queryItems.join('&');
 }
 
-
-
-
-
-
-
-function getParks(query, maxResults=10) {
+function getParks(query, maxResults = 10) {
   const params = {
     stateCode: query,
     limit: maxResults,
@@ -26,8 +16,6 @@ function getParks(query, maxResults=10) {
   };
   const queryString = formatQueryParams(params);
   const url = 'https://developer.nps.gov/api/v1/parks' + '?' + queryString;
-
-  console.log(url);
 
   fetch(url)
     .then(response => {
@@ -42,30 +30,21 @@ function getParks(query, maxResults=10) {
     });
 }
 
-
 function displayResults(responseJson) {
-  // if there are previous results, remove them
   console.log(responseJson);
   $('#results-list').empty();
-  // iterate through the items array
-  for (let i = 0; i < responseJson.data.length; i++){
-    // for each video object in the items 
-    //array, add a list item to the results 
-    //list with the video title, description,
-    //and thumbnail
+  $('#results-list').append('<h2>Search results:</h2>');
+
+  for (let i = 0; i < responseJson.data.length; i++) {
     $('#results-list').append(
-      `<li><h3>${responseJson.data[i].fullName}</h3>
-      <p>${responseJson.data[i].description}</p>
-      <p>${responseJson.data[i].latLong}</p>
-      <p>${responseJson.data[i].url}</p>
-      </li>`
-    );}
-  //display the results section  
+      `<h3>${responseJson.data[i].fullName}</h3>
+      <li>${responseJson.data[i].description}</li><br>
+      <li>${responseJson.data[i].latLong}</li><br>
+      <li><a href="${responseJson.data[i].url}">${responseJson.data[i].url}</a></li><br>`
+    );
+  }
   $('#results').removeClass('hidden');
 }
-
-
-
 
 function watchForm() {
   $('form').submit(event => {

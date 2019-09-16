@@ -5,12 +5,18 @@
 function formatQueryParams(params) {
   const queryItems = Object.keys(params)
     .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`);
+    console.log(queryItems.join('&'));
   return queryItems.join('&');
 }
 
-function getParks(query, maxResults = 10) {
+function getParks(searchTerm1, searchTerm2, maxResults = 10) {
+
+    //stateCode1: searchTerm1,
+    //stateCode2: searchTerm2,
+    //stateList: ,
+
   const params = {
-    stateCode: query,
+    stateCode: `${searchTerm1}, ${searchTerm2}`,
     limit: maxResults,
     api_key: '05k9MEhhbqhZkN9LEleXdVgUixCszymjr5lc3Vb3'
   };
@@ -37,7 +43,7 @@ function displayResults(responseJson) {
 
   for (let i = 0; i < responseJson.data.length; i++) {
     $('#results-list').append(
-      `<h3>${responseJson.data[i].fullName}</h3>
+      `<h3>${responseJson.data[i].fullName}: ${responseJson.data[i].states}</h3>
       <li>${responseJson.data[i].description}</li><br>
       <li>${responseJson.data[i].latLong}</li><br>
       <li><a href="${responseJson.data[i].url}">${responseJson.data[i].url}</a></li><br>`
@@ -49,9 +55,10 @@ function displayResults(responseJson) {
 function watchForm() {
   $('form').submit(event => {
     event.preventDefault();
-    const searchTerm = $('#js-search-term').val();
+    const searchTerm1 = $('#js-search-term-1').val();
+    const searchTerm2 = $('#js-search-term-2').val();
     const maxResults = $('#js-max-results').val();
-    getParks(searchTerm, maxResults);
+    getParks(searchTerm1, searchTerm2, maxResults);
   });
 }
 
